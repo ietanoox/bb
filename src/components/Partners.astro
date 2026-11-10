@@ -1,0 +1,23 @@
+---
+import { asset } from '../lib/urls';
+interface Props { variant?: 'home' | 'about'; }
+const { variant = 'home' } = Astro.props;
+const partners = [ ['plan-bb-logo.svg', 'Plan B&B'], ['viveka-logo.svg', 'Viveka'], ['baia-di-gio-logo.svg', 'Baia di Giò'] ];
+---
+<section class:list={['partners', variant]} aria-labelledby="partners-title">
+  <div class="container"><h2 id="partners-title" class="section-title">We work with:</h2></div>
+  <div class="partner-logos container">
+    {partners.map(([filename, name]) => <img src={asset(filename)} width="300" height="150" alt={name} loading="lazy" />)}
+  </div>
+</section>
+<style>
+  .partners { margin-top: 90px; }
+  .partners.about { margin-top: 0; }
+  .partner-logos { margin-top: 18px; width: min(100%, 1260px); display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 60px; }
+  .partner-logos img { width: 300px; max-width: 30%; height: auto; object-fit: contain; }
+  @media (max-width: 767px) {
+    .partners { margin-top: 20px; }
+    .partner-logos { flex-direction: column; gap: 45px; padding: 45px 60px; }
+    .partner-logos img { width: 100%; max-width: 270px; height: auto; }
+  }
+</style>

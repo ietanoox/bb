@@ -1,0 +1,51 @@
+---
+import { asset, href } from '../lib/urls';
+---
+<footer class="site-footer">
+  <div class="footer-cta">
+    <div class="container">
+      <h2>Get in Touch</h2>
+      <p>Feel free to <a href={href('contact-us/')}>contact us</a></p>
+      <hr />
+    </div>
+  </div>
+  <div class="footer-details container">
+    <div class="footer-left">
+      <a href={href()} aria-label="Broad Branding home"><img src={asset('broadbranding-logo.png')} width="651" height="226" loading="lazy" alt="Broad Branding" /></a>
+      <p>77, Spinola Road, St Julians<br />STJ 3017, Malta</p>
+      <nav aria-label="Footer navigation"><a href={href()}>Home</a><a href={href('about-us/')}>About</a><a href={href('contact-us/')}>Contact Us</a></nav>
+      <p>© Broad Branding</p>
+    </div>
+    <div class="footer-contact">
+      <p><a href="mailto:info@broadbranding.com">info@broadbranding.com</a></p>
+      <p><a href="tel:+35627780309">+356 2778 0309</a></p>
+    </div>
+  </div>
+</footer>
+<style>
+  .site-footer { background: var(--color-panel); }
+  .footer-cta { padding: 30px; text-align: center; }
+  .footer-cta h2 { font-size: 87px; }
+  .footer-cta p { margin: 10px 0 25px; font-size: 21px; font-weight: 500; }
+  hr { border: 0; border-top: 1px solid #d4d4d4; margin: 15px 0; }
+  .footer-details { display: flex; align-items: center; padding-block: 20px; }
+  .footer-left,.footer-contact { width: 50%; padding: 10px; }
+  .footer-left { display: flex; flex-direction: column; gap: 20px; }
+  .footer-left img { width: 22%; min-width: 110px; }
+  .footer-left p { margin: 0; }
+  .footer-left nav { display: flex; gap: 16px; }
+  .footer-left nav a { color: var(--color-text); }
+  .footer-contact { text-align: right; }
+  .footer-contact a { color: inherit; }
+  @media (max-width: 1024px) { .footer-left img { width: 35%; } }
+  @media (max-width: 767px) {
+    .footer-cta { padding: 30px 15px; }
+    .footer-cta h2 { font-size: 67px; }
+    .footer-details { flex-direction: column; }
+    .footer-left,.footer-contact { width: 100%; text-align: center; }
+    .footer-left { align-items: center; }
+    .footer-left img { width: 40%; margin-inline: auto; }
+    .footer-left > a { width: 100%; }
+    .footer-contact { margin-top: 10px; }
+  }
+</style>

@@ -1,0 +1,40 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { asset } from '../lib/urls';
+import '../styles/global.css';
+interface Props { title: string; description: string; current?: string; image?: string; }
+const { title, description, current = '', image = 'wall-logo.webp' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const socialImage = new URL(asset(image), Astro.site);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#ffffff" />
+    <title>{title}</title>
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/png" sizes="32x32" href={asset('cropped-favicon-bb-32x32.png')} />
+    <link rel="apple-touch-icon" href={asset('cropped-favicon-bb-180x180.png')} />
+    <link rel="sitemap" href={new URL(`${import.meta.env.BASE_URL}sitemap.xml`, Astro.site)} />
+    <link rel="preload" href={asset('Satoshi-Variable.ttf')} as="font" type="font/ttf" crossorigin />
+    <style is:inline set:html={`@font-face{font-family:'Satoshi';src:url('${asset('Satoshi-Variable.ttf')}') format('truetype');font-weight:100 900;font-display:swap}`}></style>
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content="Broad Branding" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+    <Header current={current} />
+    <slot />
+    <Footer />
+  </body>
+</html>

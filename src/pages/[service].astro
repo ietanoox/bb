@@ -1,0 +1,71 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import ServiceGrid from '../components/ServiceGrid.astro';
+import { services, type ServiceBlock } from '../data/services';
+import { asset } from '../lib/urls';
+export function getStaticPaths() { return services.map(service => ({ params: { service: service.slug }, props: { service } })); }
+const { service } = Astro.props;
+const isQuote = (block: ServiceBlock) => block.type !== 'image' && block.presentation === 'quote';
+---
+<SiteLayout title={service.seoTitle} description={service.description} image={service.heroImage.replace('/assets/', '')}>
+  <main id="content" class:list={['service-page', service.slug]}>
+    <div class="container">
+      <header class="page-hero"><h1>{service.title}</h1></header>
+      <img class="service-hero-image" src={asset(service.heroImage)} width="1024" height={service.slug === 'project-management' ? 563 : 561} alt={service.heroAlt} fetchpriority="high" />
+    </div>
+    <article class="service-copy container" aria-label={`${service.title} services`}>
+      {service.contentGroups.map(group => <div
+        class:list={['copy-group', {
+          'regular-copy': group.regular,
+          'mobile-centered': group.centerMobile,
+          'quote-group': isQuote(service.blocks[group.blocks[0]]),
+        }]}
+        style={`--group-margin-top:${group.marginTop ?? 0}px;--group-mobile-margin-top:${group.mobileMarginTop ?? group.marginTop ?? 0}px;--group-mobile-padding:${group.mobilePadding ?? 0}px;`}
+      >
+        {group.blocks.map(index => {
+          const block = service.blocks[index];
+          return <Fragment>
+            {group.blankBefore?.includes(index) && <p class="paragraph-spacer" aria-hidden="true"><br /></p>}
+            {block.type === 'image'
+              ? <img class="section-image" src={asset(block.src)} width="1024" height="257" loading="lazy" alt={block.alt} />
+              : block.type === 'heading'
+                ? <h2 class:list={[block.presentation, `original-h${block.level}`]}>{block.text}</h2>
+                : <p class:list={[block.presentation]}>{block.text}</p>}
+          </Fragment>;
+        })}
+        {group.blankAfter && <p class="paragraph-spacer" aria-hidden="true"><br /></p>}
+      </div>)}
+    </article>
+    <section class="related-services" aria-label="Explore our services">
+      <ServiceGrid slugs={service.relatedSlugs} compact brandImage={service.relatedBrandImage} />
+    </section>
+  </main>
+</SiteLayout>
+<style>
+  .page-hero { padding: 109px 0 129px; }
+  .service-hero-image { width: 100%; }
+  .service-copy { display: flex; flex-direction: column; gap: 20px; font-size: 17px; line-height: 1.3; font-weight: 500; }
+  .copy-group { margin-top: var(--group-margin-top); }
+  .copy-group p { margin: 0 0 .9rem; }
+  .project-management .copy-group:not(.quote-group) { padding-inline: 10px; }
+  .regular-copy { font-size: 16px; font-weight: 400; line-height: 1.5; padding-bottom: 10px; }
+  .project-management .regular-copy { padding-bottom: 10px; }
+  .subheading { font-size: 24px; font-weight: 500; line-height: 1.2; margin: .5rem 0 1rem; }
+  .original-h3.subheading { font-size: 28px; }
+  .section-heading { text-align: center; font-size: 30px; margin: 0; }
+  .section-image { width: 100%; }
+  .quote-group { padding: 40px; text-align: center; }
+  .service-copy .quote { font-size: 30px; font-weight: 700; color: var(--color-heading); line-height: 1.5; margin: 0; }
+  .service-copy .original-h3.quote { font-size: 28px; font-weight: 500; line-height: 1.2; margin: .5rem 0 1rem; }
+  .related-services { margin-bottom: 60px; }
+  @media (max-width: 767px) {
+    .page-hero { padding: 5px 0 10px; }
+    .project-management .page-hero { padding: 25px 0 50px; }
+    .service-copy { margin-top: -20px; gap: 0; font-size: 16px; }
+    .copy-group { margin-top: var(--group-mobile-margin-top); padding: var(--group-mobile-padding); }
+    .mobile-centered { text-align: center; }
+    .project-management .service-copy { margin-top: 0; gap: 20px; }
+    .service-copy .quote { font-size: 22px; }
+    .service-copy .original-h3.quote { font-size: 28px; }
+  }
+</style>

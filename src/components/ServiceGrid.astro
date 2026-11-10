@@ -1,0 +1,35 @@
+---
+import { services } from '../data/services';
+import { href, asset } from '../lib/urls';
+interface Props { slugs?: string[]; compact?: boolean; brandImage?: boolean; }
+const { slugs, compact = false, brandImage = false } = Astro.props;
+const cards = slugs ? slugs.map(slug => services.find(service => service.slug === slug)!).filter(Boolean) : services;
+---
+<div class:list={['service-grid container', { compact }]}>
+  {cards.map(service => <article class="service-card">
+    <img class="service-icon" src={asset(`icon-${service.slug}.svg`)} width="118" height="118" loading="lazy" alt="" />
+    <h3>{service.title}</h3>
+    <p>{service.cardDescription}</p>
+    <a class="learn-more" href={href(`${service.slug}/`)} aria-label={`Learn more about ${service.title.toLowerCase()}`}>Learn More</a>
+  </article>)}
+  {brandImage && <div class="brand-card"><img src={asset('broad-branding-768x657.webp')} width="768" height="657" alt="Broad Branding" loading="lazy" /></div>}
+</div>
+<style>
+  .service-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px 18px; }
+  .service-card { padding: 36px; background: var(--color-panel); text-align: center; }
+  .service-icon { margin: 0 auto 23px; width: 118px; height: 118px; }
+  h3 { color: #000; font-size: 21px; margin-bottom: 16px; }
+  p { font-size: 18px; line-height: 1.5; font-weight: 500; margin-bottom: 20px; }
+  .learn-more { display: block; margin-bottom: .9rem; font-size: 17px; font-weight: 700; }
+  .compact h3 { color: var(--color-heading); }
+  .compact p { font-size: 17px; line-height: 1.3; }
+  .brand-card { min-height: 300px; background: var(--color-panel); }
+  .brand-card img { width: 100%; height: 100%; object-fit: cover; }
+  @media (max-width: 767px) {
+    .service-grid { grid-template-columns: 1fr; }
+    .compact .service-icon { width: 80px; height: 80px; }
+    .compact h3 { font-size: 18px; }
+    .compact p { font-size: 16px; }
+    .brand-card { min-height: 250px; max-height: 400px; }
+  }
+</style>
